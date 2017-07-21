@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <version>0.1.0-SNAPSHOT</version>
     <name>Wintersleep 99.0-does-not-exist Maven Repo Server</name>
-    <url>https://gitlab.com/dverstap/wintersleep-nnzero</url>
+    <url>https://github.com/dverstap/wintersleep-nnzero</url>
     <description>
         Maven repository server that creates empty jar files for artifacts with version 99.0-does-not-exist
     </description>
@@ -144,14 +144,14 @@
         <developer>
             <name>Davy Verstappen</name>
             <email>davy@wintersleep.org</email>
-            <url>https://gitlab.com/dverstap</url>
+            <url>https://github.com/dverstap</url>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git@gitlab.com:dverstap/wintersleep-nnzero.git</connection>
-        <developerConnection>scm:git:git@gitlab.com:dverstap/wintersleep-nnzero.git</developerConnection>
-        <url>git@gitlab.com:dverstap/wintersleep-nnzero.git</url>
+        <connection>scm:git:git@github.com:dverstap/wintersleep-nnzero.git</connection>
+        <developerConnection>scm:git:git@github.com:dverstap/wintersleep-nnzero.git</developerConnection>
+        <url>git@github.com:dverstap/wintersleep-nnzero.git</url>
         <tag>HEAD</tag>
     </scm>
 
