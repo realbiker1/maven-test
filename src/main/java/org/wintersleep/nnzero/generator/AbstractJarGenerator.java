@@ -41,7 +41,7 @@ abstract class AbstractJarGenerator implements Generator {
         Manifest manifest = new Manifest();
         Attributes attrs = manifest.getMainAttributes();
         attrs.put(Attributes.Name.MANIFEST_VERSION, "1.0");
-        attrs.put(new Attributes.Name("Created-By"), "wintersleep-nnzero"); // TODO nnzero version number
+        attrs.put(new Attributes.Name("Created-By"), "wintersleep-nnzero");
         return manifest;
     }
 }

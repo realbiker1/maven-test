@@ -26,9 +26,11 @@ import org.wintersleep.nnzero.FileId;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.String.format;
+
 public class GeneratorFactory {
 
-    private final static Logger log = Logger.getLogger(GeneratorFactory.class.getName());
+    private static final Logger log = Logger.getLogger(GeneratorFactory.class.getName());
 
     private static final String NNZERO_DOES_NOT_EXIST = "99.0-does-not-exist";
 
@@ -49,10 +51,10 @@ public class GeneratorFactory {
                 case "pom":
                     return new PomGenerator(fileId);
                 default:
-                    log.log(Level.WARNING, "Unsupported extension '" + fileId.getExtension() + "'");
+                    log.log(Level.WARNING, format("Unsupported extension '%s'", fileId.getExtension()));
             }
         } else {
-            log.log(Level.WARNING, "Version '" + fileId.getVersion() + "' is not '" + NNZERO_DOES_NOT_EXIST + "'");
+            log.log(Level.WARNING, format("Version '%s' is not '%s'", fileId.getVersion(), NNZERO_DOES_NOT_EXIST));
         }
         return null;
     }

@@ -49,7 +49,7 @@ public class Main {
     }
 
     private static InetSocketAddress createSocketAddress(String[] args) throws UnknownHostException {
-        InetAddress address = InetAddress.getByName("0.0.0.0");
+        InetAddress address = InetAddress.getByAddress(new byte[]{0, 0, 0, 0});
         if (args.length >= 1) {
             address = InetAddress.getByName(args[0]);
         }

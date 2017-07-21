@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 
 class NNZeroHttpHandler implements HttpHandler {
 
-    private final static Logger log = Logger.getLogger(NNZeroHttpHandler.class.getName());
+    private static final Logger log = Logger.getLogger(NNZeroHttpHandler.class.getName());
 
     private final GeneratorFactory generatorFactory = new GeneratorFactory();
 
@@ -49,7 +49,7 @@ class NNZeroHttpHandler implements HttpHandler {
         } catch (Exception e) {
             log.log(Level.WARNING, e.getMessage(), e);
             he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            throw new RuntimeException(e.getMessage(), e);
+            throw new NNZeroException(e.getMessage(), e);
         } finally {
             he.close();
         }

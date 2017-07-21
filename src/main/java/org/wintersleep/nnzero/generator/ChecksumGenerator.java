@@ -20,7 +20,10 @@ package org.wintersleep.nnzero.generator;
  * #L%
  */
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.security.MessageDigest;
 
 class ChecksumGenerator implements Generator {
@@ -47,7 +50,7 @@ class ChecksumGenerator implements Generator {
     }
 
 
-    final private static char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
+    private static final char[] HEX_ARRAY = "0123456789abcdef".toCharArray();
 
     private static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];

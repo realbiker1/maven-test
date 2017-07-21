@@ -21,10 +21,10 @@ package org.wintersleep.nnzero;
  */
 
 
-final public class FileIds {
+public final class FileIds {
 
     private FileIds() {
-        throw new RuntimeException("Static utility class is not intended to be instantiated.");
+        throw new NNZeroException("Static utility class is not intended to be instantiated.");
     }
 
     public static FileId parse(String path) {

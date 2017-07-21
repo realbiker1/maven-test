@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/dverstap/wintersleep-nnzero.svg?branch=master)](https://travis-ci.org/dverstap/wintersleep-nnzero)
 [![Maven Central](https://img.shields.io/maven-central/v/org.wintersleep.nnzero/wintersleep-nnwero.svg)]()
 [![License](https://img.shields.io/github/license/dverstap/wintersleep-nnzero.svg)]()
+[![Quality Gate](https://sonarqube.com/api/badges/gate?key=org.wintersleep.nnzero:wintersleep-nnzero)](https://sonarqube.com/dashboard/index/org.wintersleep.nnzero:wintersleep-nnzero)
 
 Wintersleep 99.0-does-not-exist Maven Repo Server
 =================================================
