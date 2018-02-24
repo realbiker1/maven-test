@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/dverstap/wintersleep-nnzero.svg?branch=master)](https://travis-ci.org/dverstap/wintersleep-nnzero)
-[![Maven Central](https://img.shields.io/maven-central/v/org.wintersleep.nnzero/wintersleep-nnwero.svg)]()
+[![Maven Central](https://img.shields.io/maven-central/v/org.wintersleep.nnzero/wintersleep-nnzero.svg)]()
 [![License](https://img.shields.io/github/license/dverstap/wintersleep-nnzero.svg)]()
 [![Quality Gate](https://sonarqube.com/api/badges/gate?key=org.wintersleep.nnzero:wintersleep-nnzero)](https://sonarqube.com/dashboard/index/org.wintersleep.nnzero:wintersleep-nnzero)
 
@@ -37,13 +37,13 @@ built into the JDK (`com.sun.net.httpserver`).
 
 It can be started like this:
 
-> java -jar wintersleep-nnzero-0.1.0.jar
+> java -jar wintersleep-nnzero-1.3.jar
 
 That will listen on all network interfaces on port 9999. It accepts
 two optional arguments (bind address and port). For example to listen
 only on the IPv4 loopback interface and on a different port, run as:
 
-> java -jar wintersleep-nnzero-0.1.0.jar 127.0.0.1 8888
+> java -jar wintersleep-nnzero-1.3.jar 127.0.0.1 8888
 
 Logging can be enabled with `java.util.logging` logging properties,
 for example:
