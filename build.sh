@@ -22,7 +22,6 @@ CURL='curl --silent --fail'
 for ext in .jar .pom -javadoc.jar -sources.jar
 do
     URL=${SERVER_URL}/org/wintersleep/nnzero/wintersleep-nnzero/99.0-does-not-exist/wintersleep-nnzero-99.0-does-not-exist
-
     ${CURL} -O ${URL}${ext}
     for checksum in md5 sha1
     do
@@ -31,4 +30,4 @@ do
 done
 
 cd -
-mvn javadoc:jar source:jar
+mvn -Prelease install
