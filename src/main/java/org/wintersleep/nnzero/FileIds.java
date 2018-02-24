@@ -23,7 +23,7 @@ package org.wintersleep.nnzero;
 
 public final class FileIds {
 
-    private FileIds() {
+    FileIds() {
         throw new NNZeroException("Static utility class is not intended to be instantiated.");
     }
 

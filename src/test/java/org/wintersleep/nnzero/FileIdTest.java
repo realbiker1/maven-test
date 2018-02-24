@@ -28,6 +28,11 @@ import static org.junit.Assert.assertTrue;
 
 public class FileIdTest {
 
+    @Test(expected = NNZeroException.class)
+    public void testCannotInstanceFileIds() {
+        new FileIds();
+    }
+
     @Test
     public void testBaseName() {
         assertEquals("", FileId.determineBaseName(""));
