@@ -1,0 +1,138 @@
+name: Generate Multi-Language SBOM with CycloneDX.
+
+on:
+  push:
+    branches:
+      - "*" # Updates every push to any branch.
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create sboms directory
+        run: |
+          mkdir -p sboms
+        working-directory: ${{ github.workspace }} # Ensure you're in the workspace root
+
+      # Node.js
+      - name: Check if the project uses Node.js
+        id: check-nodejs
+        run:
+          | # Checks if the project contains package.json with node.js dependencies
+          if [ -f "package.json" ] && grep -q '"dependencies": *{' package.json; then
+            echo "Node.js project detected."
+            echo "NODE_PROJECT=true" >> $GITHUB_ENV
+          else
+            echo "No Node.js project detected. Skipping Node.js setup."
+            echo "NODE_PROJECT=false" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Node.js environment and Generate SBOM (if applicable)
+        if: env.NODE_PROJECT == 'true'
+        run: |
+          echo "Installing Node.js dependencies..."
+          npm install
+
+          echo "Installing CycloneDX..."
+          npm install -g cyclonedx-bom
+
+          echo "Generating Node.js SBOM..."
+          cyclonedx-bom -o sboms/node-bom.xml
+      # Node.js END
+      
+      # Python
+      - name: Check if the project uses Python
+        run: |
+          if [ -f "requirements.txt" ] || [ -f "setup.py" ] || [ -f "pyproject.toml" ]; then
+            echo "PYTHON_PROJECT=true" >> $GITHUB_ENV
+          else
+            echo "PYTHON_PROJECT=false" >> $GITHUB_ENV
+          fi
+
+      - name: Generate Python SBOM
+        if: env.PYTHON_PROJECT == 'true'
+        uses: CycloneDX/gh-python-generate-sbom@v2
+        with:
+          input: ./requirements.txt
+          output: ./sboms/python-bom.xml
+          format: xml
+      # Python END
+      
+      # Maven (Java)
+      - name: Check if the project uses Maven and get Java version
+        id: check-maven
+        run: | # Checks if the project has the pom.xml file.
+          if [ -f "pom.xml" ]; then
+            echo "Maven project detected."
+            echo "MAVEN_PROJECT=true" >> $GITHUB_ENV
+            
+            # For Maven projects, need to find the Java version. Using Java 11 as default if not specified.
+            
+            java_version=$(grep -oP '<maven.compiler.source>\K[^<]+' pom.xml)
+            if [ -z "$java_version" ]; then
+              echo "Java version not specified in pom.xml. Using default version (11)."
+              echo "JAVA_VERSION=11" >> $GITHUB_ENV
+            else
+              echo "Detected Java version $java_version."
+              echo "JAVA_VERSION=$java_version" >> $GITHUB_ENV
+            fi
+          else
+            echo "No Maven project detected. Skipping Java setup"
+            echo "MAVEN_PROJECT=false" >> $GITHUB_ENV
+          fi
+
+      - name: Setup Java environment and generate Java SBOM (if applicable)
+        if: env.MAVEN_PROJECT == 'true'
+        run: |
+          echo "Setting up Java environment with Java ${{ env.JAVA_VERSION }}..."
+          uses: actions/setup-java@v2
+          with:
+            distribution: 'adopt'
+            java-version: ${{ env.JAVA_VERSION }}
+
+          echo "Building the project and generating Java SBOM..."
+          mvn clean install cyclonedx:makeAggregateBom
+          cp target/bom.xml sboms/maven-bom.xml 
+      # JAVA END
+
+      # .NET
+      - name: Check if the project uses .NET and get .NET version
+        id: check-dotnet
+        run: |
+          csproj_paths=$(find . -name '*.csproj')
+          if [ -n "$csproj_paths" ]; then
+            echo ".NET projects detected."
+            echo "DOTNET_PROJECT=true" >> $GITHUB_ENV
+            echo "CSPROJ_PATHS=$(echo "$csproj_paths" | tr '\n' ',')" >> $GITHUB_ENV
+          else
+            echo "No .NET project detected. Skipping .NET setup"
+            echo "DOTNET_PROJECT=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Setup .NET environment and generate .NET SBOM (if applicable)
+        if: env.DOTNET_PROJECT == 'true'
+        run: |
+          dotnet build
+          echo "Installing CycloneDX"
+          dotnet tool install --global CycloneDX
+          echo "Generating merged .NET SBOM..."
+          IFS=',' read -ra ADDR <<< "$CSPROJ_PATHS"
+          for csproj_path in "${ADDR[@]}"; do
+            dotnet CycloneDX "$csproj_path" -o sboms/dotnet-bom-$(basename "$csproj_path" .csproj).xml -r
+          done
+
+
+      # Archive all SBOMs
+      - name: Archive SBOMs
+        uses: actions/upload-artifact@v2
+        with:
+          name: sbom-artifact
+          path: |
+            ./sboms/node-bom.xml
+            ./sboms/python-bom.xml
+            ./sboms/maven-bom.xml
+            ./sboms/dotnet-bom-*.xml
