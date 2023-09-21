@@ -69,9 +69,6 @@ jobs:
           if [ -f "pom.xml" ]; then
             echo "Maven project detected."
             echo "MAVEN_PROJECT=true" >> $GITHUB_ENV
-            
-            # For Maven projects, need to find the Java version. Using Java 11 as default if not specified.
-
           else
             echo "No Maven project detected. Skipping Java setup"
             echo "MAVEN_PROJECT=false" >> $GITHUB_ENV
@@ -80,15 +77,9 @@ jobs:
       - name: Setup Java environment and generate Java SBOM (if applicable)
         if: env.MAVEN_PROJECT == 'true'
         run: |
-          echo "Setting up Java environment with Java ${{ env.JAVA_VERSION }}..."
-          uses: actions/setup-java@v2
-          with:
-            distribution: 'adopt'
-            java-version: ${{ env.JAVA_VERSION }}
-
           echo "Building the project and generating Java SBOM..."
           mvn clean install cyclonedx:makeAggregateBom
-          cp target/bom.xml sboms/maven-bom.xml 
+          cp target/bom.xml sboms/maven-bom.xml
       # JAVA END
 
       # .NET
