@@ -3,7 +3,7 @@ name: Generate Multi-Language SBOM with CycloneDX.
 on:
   push:
     branches:
-      - "*" # Updates every push to any branch.
+      - "*" # Updates every push to any branch
 
 jobs:
   generate-sbom:
