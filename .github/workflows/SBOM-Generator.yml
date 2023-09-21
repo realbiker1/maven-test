@@ -3,7 +3,7 @@ name: Generate Multi-Language SBOM with CycloneDX.
 on:
   push:
     branches:
-      - "*" # Updates every push to any branch
+      - "*" # Updates every push to any branch.
 
 jobs:
   generate-sbom:
@@ -62,17 +62,31 @@ jobs:
           format: xml
       # Python END
       
-      # Maven (Java)
-      - name: Check if the project uses Maven and get Java version
+      # Java (Maven)
+      - name: Check if the project uses Maven
         id: check-maven
-        run: | # Checks if the project has the pom.xml file.
+        run: |
           if [ -f "pom.xml" ]; then
             echo "Maven project detected."
             echo "MAVEN_PROJECT=true" >> $GITHUB_ENV
-          else
-            echo "No Maven project detected. Skipping Java setup"
-            echo "MAVEN_PROJECT=false" >> $GITHUB_ENV
           fi
+      
+      - name: Install xmlstarlet
+        if: env.MAVEN_PROJECT == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xmlstarlet
+      
+      - name: Add CycloneDX plugin to pom.xml
+        if: env.MAVEN_PROJECT == 'true'
+        run: |
+          xmlstarlet ed --inplace \
+            -N x=http://maven.apache.org/POM/4.0.0 \
+            -s /x:project/x:build/x:plugins -t elem -n plugin \
+            -s //plugin[last()] -t elem -n groupId -v org.cyclonedx \
+            -s //plugin[last()] -t elem -n artifactId -v cyclonedx-maven-plugin \
+            -s //plugin[last()] -t elem -n version -v '2.6.x' \
+            pom.xml
 
       - name: Setup Java environment and generate Java SBOM (if applicable)
         if: env.MAVEN_PROJECT == 'true'
@@ -80,7 +94,7 @@ jobs:
           echo "Building the project and generating Java SBOM..."
           mvn clean install cyclonedx:makeAggregateBom
           cp target/bom.xml sboms/maven-bom.xml
-      # JAVA END
+            # Java (Maven) END
 
       # .NET
       - name: Check if the project uses .NET and get .NET version
@@ -98,7 +112,7 @@ jobs:
       
       - name: Setup .NET environment and generate .NET SBOM (if applicable)
         if: env.DOTNET_PROJECT == 'true'
-        run: |
+        run: |        
           dotnet build
           echo "Installing CycloneDX"
           dotnet tool install --global CycloneDX
