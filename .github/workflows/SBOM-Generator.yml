@@ -71,15 +71,7 @@ jobs:
             echo "MAVEN_PROJECT=true" >> $GITHUB_ENV
             
             # For Maven projects, need to find the Java version. Using Java 11 as default if not specified.
-            
-            java_version=$(grep -oP '<maven.compiler.source>\K[^<]+' pom.xml)
-            if [ -z "$java_version" ]; then
-              echo "Java version not specified in pom.xml. Using default version (11)."
-              echo "JAVA_VERSION=11" >> $GITHUB_ENV
-            else
-              echo "Detected Java version $java_version."
-              echo "JAVA_VERSION=$java_version" >> $GITHUB_ENV
-            fi
+
           else
             echo "No Maven project detected. Skipping Java setup"
             echo "MAVEN_PROJECT=false" >> $GITHUB_ENV
